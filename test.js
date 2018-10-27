@@ -1,5 +1,4 @@
 const fs = require('fs');
-const zlib = require('zlib');
 const commandLineArgs = require('command-line-args')
 const zlibjs = require("zlibjs");
 const base64js = require("base64-js")
@@ -18,7 +17,7 @@ const main = ()=>{
         if (options.input === undefined) {
             throw(new Error("Input file not specified"));
         }
-        let jsSource = base64js.fromByteArray(zlib.deflateRawSync(fs.readFileSync(options.input)));
+        let jsRaw = (new zlibjs.RawDeflate(fs.readFileSync(options.input))).compress();
         let inflateCode = base64js.fromByteArray(fs.readFileSync(appRoot + "/node_modules/zlibjs/bin/rawinflate.min.js"));
         let base64Code = base64js.fromByteArray(fs.readFileSync(appRoot + "/node_modules/base64-js/base64js.min.js"));
     } catch (err){
