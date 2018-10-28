@@ -10,5 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "command-line-args": "^5.0.2"
+  },
+  "bin": {
+    "jsdeflate": "./index.js"
   }
 }
