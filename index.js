@@ -188,10 +188,19 @@ const main = ()=>{
             throw(new Error("Input file not specified"));
         }
         let jsSource = Buffer.from(zlib.deflateRawSync(fs.readFileSync(options.input), {level: zlib.constants.Z_BEST_COMPRESSION})).toString("base64");
-        let output = `/* Compressed with jsdeflate [https://github.com/jaracil/jsdeflate.git] */\n\n`+
-        `${b64ToString(base64Code)}\n`+
-        `${b64ToString(inflateCode)}\n`+
-        `eval(new TextDecoder("utf-8").decode(new Zlib.RawInflate(base64js.toByteArray('${jsSource}')).decompress()));`
+        let output = `/* Compressed with jsdeflate [https://github.com/jaracil/jsdeflate.git] */
+${b64ToString(base64Code)}
+${b64ToString(inflateCode)}
+jsSource = '${jsSource}'
+if ((typeof process !== 'undefined') && (process.release.name === 'node')){
+    var TextDecoder = require('util').TextDecoder;
+    var zlib = require('zlib')
+    eval(new TextDecoder("utf-8").decode(zlib.inflateRawSync(Buffer.from(jsSource, 'base64'))));
+} else {
+    eval(new TextDecoder("utf-8").decode(new Zlib.RawInflate(base64js.toByteArray(jsSource)).decompress()));
+}
+delete jsSource;
+`
         if (options.output === '-'){
             console.log(output);
         } else {
