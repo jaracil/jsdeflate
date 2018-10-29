@@ -175,9 +175,9 @@ const main = ()=>{
     const optionDefinitions = [
         { name: 'input', alias: 'i', type: String, defaultOption: true },
         { name: 'output', alias: "o", type: String, defaultValue: "-"},
+        { name: 'nobrowser', alias: "n", type: Boolean, defaultValue: false},
         { name: 'help', alias: "h", type: Boolean, defaultValue: false}
-      ]
-
+    ]
     try {
         let options = commandLineArgs(optionDefinitions)
         if (options.help){
@@ -187,15 +187,23 @@ const main = ()=>{
         if (options.input === undefined) {
             throw(new Error("Input file not specified"));
         }
-        let jsSource = Buffer.from(zlib.deflateRawSync(fs.readFileSync(options.input), {level: zlib.constants.Z_BEST_COMPRESSION})).toString("base64");
-        let output = `/* Compressed with jsdeflate [https://github.com/jaracil/jsdeflate.git] */
-${b64ToString(base64Code)}
-${b64ToString(inflateCode)}
-jsSource = '${jsSource}'
+        let sourceBuffer = fs.readFileSync(options.input);
+        let sourceText = sourceBuffer.toString('utf-8');
+        let sourcePrefix = '';
+        if (sourceText.startsWith('#!')){
+            console.log("Detected #!")
+            let sourceLines = sourceText.split('\n');
+            sourcePrefix = sourceLines[0]+'\n';
+            sourceBuffer = Buffer.from(sourceLines.slice(1).join('\n'), 'utf-8');
+            options.nobrowser = true; 
+        }
+        let sourceEncoded = Buffer.from(zlib.deflateRawSync(sourceBuffer, {level: zlib.constants.Z_BEST_COMPRESSION})).toString("base64");
+        let output = 
+`${sourcePrefix}/* Compressed with jsdeflate [https://github.com/jaracil/jsdeflate.git] */
+${options.nobrowser ? "" : b64ToString(base64Code)+'\n'+b64ToString(inflateCode)}
+jsSource = '${sourceEncoded}'
 if ((typeof process !== 'undefined') && (process.release.name === 'node')){
-    var TextDecoder = require('util').TextDecoder;
-    var zlib = require('zlib')
-    eval(new TextDecoder("utf-8").decode(zlib.inflateRawSync(Buffer.from(jsSource, 'base64'))));
+    eval(Buffer.from((require('zlib').inflateRawSync(Buffer.from(jsSource, 'base64')))).toString('utf-8'));
 } else {
     eval(new TextDecoder("utf-8").decode(new Zlib.RawInflate(base64js.toByteArray(jsSource)).decompress()));
 }
