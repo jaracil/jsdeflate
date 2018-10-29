@@ -168,15 +168,15 @@ jsdeflate input_file > output_file         #Input and output files must not be t
 jsdeflate -n -i input_file -o output_file  #Output file only works in nodeJS.
 `
 
-const printHelp = ()=>{
+const printHelp = () => {
     console.log(helpString);
-}
+};
 
-const b64ToString = (b64Str)=>{
+const b64ToString = b64Str => {
     return Buffer.from(b64Str, 'base64').toString('utf-8');
-}
+};
 
-const main = ()=>{
+const main = () => {
     const optionDefinitions = [
         { name: 'input', alias: 'i', type: String, defaultOption: true },
         { name: 'output', alias: "o", type: String, defaultValue: "-"},
@@ -223,6 +223,6 @@ delete jsSource;
         printHelp();
         process.exit(1);
     }
-} 
+};
 
 main();
