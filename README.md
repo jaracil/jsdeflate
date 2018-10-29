@@ -17,7 +17,7 @@ Options:
 --nobrowser, -n      Exclude browser bootstrap code.
 
 Usage examples:
-jsdefalte -i input_file -o output_file     #Input and output files can be the same. 
+jsdeflate -i input_file -o output_file     #Input and output files can be the same. 
 jsdeflate input_file > output_file         #Input and output files must not be the same.
 jsdeflate -n -i input_file -o output_file  #Output file only works in nodeJS.
 ```
