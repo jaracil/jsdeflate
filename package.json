@@ -1,13 +1,18 @@
 {
   "name": "jsdeflate",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Deflate big Javascript files",
   "main": "index.js",
   "repository": "https://github.com/jaracil/jsdeflate",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["jsdeflate", "compress", "deflate", "wechat"],
+  "keywords": [
+    "jsdeflate",
+    "compress",
+    "deflate",
+    "wechat"
+  ],
   "author": "Jose Luis Aracil",
   "license": "MIT",
   "dependencies": {
