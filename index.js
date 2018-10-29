@@ -157,10 +157,15 @@ JClaPVlbJF0scigiWmxpYi5SYXdJbmZsYXRlLkJ1ZmZlclR5cGUuIitaLFhbWl0pO30pLmNhbGwo
 dGhpcyk7Cg==`
 
 const helpString = `
-Usage examples:
+Options:
+--input, -i          Uncompressed input file.
+--output, -o         Compressed output file.
+--nobrowser, -n      Exclude browser bootstrap code.
 
-jsdefalte -i input_file -o output_file    #Input and output files can be the same. 
-jsdeflate input_js_file > output_js_file  #Input and output files must not be the same.
+Usage examples:
+jsdefalte -i input_file -o output_file     #Input and output files can be the same. 
+jsdeflate input_file > output_file         #Input and output files must not be the same.
+jsdeflate -n -i input_file -o output_file  #Output file only works in nodeJS.
 `
 
 const printHelp = ()=>{
@@ -177,7 +182,7 @@ const main = ()=>{
         { name: 'output', alias: "o", type: String, defaultValue: "-"},
         { name: 'nobrowser', alias: "n", type: Boolean, defaultValue: false},
         { name: 'help', alias: "h", type: Boolean, defaultValue: false}
-    ]
+    ];
     try {
         let options = commandLineArgs(optionDefinitions)
         if (options.help){
@@ -191,7 +196,6 @@ const main = ()=>{
         let sourceText = sourceBuffer.toString('utf-8');
         let sourcePrefix = '';
         if (sourceText.startsWith('#!')){
-            console.log("Detected #!")
             let sourceLines = sourceText.split('\n');
             sourcePrefix = sourceLines[0]+'\n';
             sourceBuffer = Buffer.from(sourceLines.slice(1).join('\n'), 'utf-8');
@@ -212,7 +216,7 @@ delete jsSource;
         if (options.output === '-'){
             console.log(output);
         } else {
-            fs.writeFileSync(options.output, output, {encoding:'utf8', flag:'w'})
+            fs.writeFileSync(options.output, output, {encoding:'utf8', flag:'w'});
         }
     } catch (err){
         console.error(err.message);
