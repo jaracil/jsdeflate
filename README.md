@@ -4,7 +4,7 @@ Compressor for big/huge javascript files.
 Generates a javascript file containing the original file compressed and encoded in base64 with a light bootstrap code that decompresses and evals the original file.
 
 ## Why?
-We needed to reduce javascript file size to fit into wechat miniprogram restrictions.
+We needed to reduce javascript file size to fit into some environment restrictions.
 
 ## Install
 `npm install -g jsdeflate`
